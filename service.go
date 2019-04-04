@@ -2,13 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"log"
 	"my-daoservice/config"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-// Execute ...
+// Execute executes prepare statment without any return rows (e.g. create/update/delete).
+// The return value will be true if execution success.
 func Execute(stmt string, params ...interface{}) bool {
 	db, err := sql.Open(config.DriverName, config.DNS)
 	if err != nil {
@@ -16,23 +16,22 @@ func Execute(stmt string, params ...interface{}) bool {
 	}
 	defer db.Close()
 
-	stmtIns, err := db.Prepare(stmt) // ? = placeholder
+	stmtIns, err := db.Prepare(stmt)
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
-	defer stmtIns.Close() // Close the statement when we leave main() / the program terminates
+	defer stmtIns.Close()
 
-	// Insert square numbers for 0-24 in the database
-
-	_, err = stmtIns.Exec(params...) // Insert tuples (i, i^2)
+	_, err = stmtIns.Exec(params...)
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
 
 	return true
 }
 
-// Query queries
+// Query executes a query that returns row(select).
+// The return data will be the type map[string]interface{}.
 func Query(stmt string, params ...interface{}) []interface{} {
 	db, err := sql.Open(config.DriverName, config.DNS)
 	if err != nil {
@@ -42,20 +41,19 @@ func Query(stmt string, params ...interface{}) []interface{} {
 
 	stmtOut, err := db.Prepare(stmt)
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
 	defer stmtOut.Close()
 
 	rows, err := stmtOut.Query(params...)
 	if err != nil {
-		log.Fatal(err.Error())
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
 
 	//Get column names
 	columns, err := rows.Columns()
 	if err != nil {
-		panic(err.Error()) // proper error handling instead of panic in your app
+		panic(err.Error())
 	}
 
 	//Make a slice for the values
@@ -69,7 +67,6 @@ func Query(stmt string, params ...interface{}) []interface{} {
 		scanArgs[i] = &values[i]
 	}
 
-	//log.Println(len(scanArgs))
 	data := make([]interface{}, 0)
 	// Fetch rows
 	for rows.Next() {
@@ -90,13 +87,10 @@ func Query(stmt string, params ...interface{}) []interface{} {
 				value = string(col)
 			}
 			d[columns[i]] = value
-			//fmt.Println(columns[i], ": ", value)
 		}
 		data = append(data, d)
-		//fmt.Println("-----------------------------------")
 	}
 
-	// proper error handling instead of panic in your app
 	if err = rows.Err(); err != nil {
 		panic(err.Error())
 	}
