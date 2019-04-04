@@ -1,9 +1,11 @@
-package main
+package test
 
 import (
 	"database/sql"
 	"testing"
 	"time"
+
+	dao "my-daoservice/service"
 
 	config "my-daoservice/config"
 
@@ -49,25 +51,25 @@ func TestConnection(t *testing.T) {
 
 func TestExecute(t *testing.T) {
 	stmt1 := "INSERT INTO demo.users (name, email, password, created_at) VALUES(?,?,?,?);"
-	Execute(stmt1, faker.Username(), faker.Email(), faker.Password(), time.Now())
+	dao.Execute(stmt1, faker.Username(), faker.Email(), faker.Password(), time.Now())
 }
 
 func TestQuery(t *testing.T) {
 	stmt := "SELECT * FROM users;"
-	Query(stmt)
+	dao.Query(stmt)
 }
 
 func BenchmarkQuery(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		Query("SELECT * FROM demo.users;")
+		dao.Query("SELECT * FROM demo.users;")
 	}
 }
 
 func BenchmarkExecute(b *testing.B) {
 	stmt1 := "INSERT INTO demo.users (name, email, password, created_at) VALUES(?, ?, ?, ?);"
 	for i := 0; i < b.N; i++ {
-		Execute(stmt1, faker.Username(), faker.Email(), faker.Password(), time.Now())
+		dao.Execute(stmt1, faker.Username(), faker.Email(), faker.Password(), time.Now())
 	}
 
-	//Execute("TRUNCATE TABLE demo.users;")
+	dao.Execute("TRUNCATE TABLE demo.users;")
 }

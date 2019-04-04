@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	dao "my-daoservice/service"
 	"time"
 )
 
@@ -10,7 +11,7 @@ func main() {
 	// insert a demo user
 	insertStmt := "INSERT INTO demo.users (name, email, password, created_at) VALUES(?,?,?,?);"
 
-	ok := Execute(insertStmt, "demoUser", "faker@test.com", "passwd", time.Now())
+	ok := dao.Execute(insertStmt, "demoUser", "faker@test.com", "passwd", time.Now())
 	if !ok {
 		panic("Some error")
 	}
@@ -18,7 +19,7 @@ func main() {
 	// select user by user name
 	queryStmt := "SELECT * FROM demo.users WHERE name = ?;"
 
-	data := Query(queryStmt, "demoUser")
+	data := dao.Query(queryStmt, "demoUser")
 
 	// convert interface to map
 	user, ok := data[0].(map[string]interface{})
@@ -32,5 +33,5 @@ func main() {
 	// delete demo user
 	deleteStmt := "DELETE FROM demo.users WHERE name = ?;"
 
-	Execute(deleteStmt, "demoUser")
+	dao.Execute(deleteStmt, "demoUser")
 }
