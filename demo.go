@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	dao "my-daoservice/service"
+	dao "go-daoservice/service"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {

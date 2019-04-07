@@ -10,13 +10,13 @@ import (
 	"testing"
 	"time"
 
-	dao "my-daoservice/service"
+	_ "github.com/go-sql-driver/mysql"
 
-	config "my-daoservice/config"
+	dao "go-daoservice/service"
+
+	config "go-daoservice/config"
 
 	faker "github.com/bxcodec/faker"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 var cpuprofile = flag.String("cpuprofile", "", "write cpu profile to `file`")
@@ -117,7 +117,7 @@ func BenchmarkExecute(b *testing.B) {
 		dao.Execute(stmt1, faker.Username(), faker.Email(), faker.Password(), time.Now())
 	}
 
-	dao.Execute("TRUNCATE TABLE demo.users;")
+	//dao.Execute("TRUNCATE TABLE demo.users;")
 
 	if *memprofile != "" {
 		f, err := os.Create(*memprofile)

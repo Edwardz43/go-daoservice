@@ -2,9 +2,7 @@ package service
 
 import (
 	"database/sql"
-	"my-daoservice/config"
-
-	_ "github.com/go-sql-driver/mysql"
+	"go-daoservice/config"
 )
 
 // Execute executes prepare statment without any return rows (e.g. create/update/delete).
