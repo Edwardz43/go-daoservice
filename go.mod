@@ -1,4 +1,4 @@
-module go-daoservice
+module github.com/Edwardz43/go-daoservice
 
 go 1.12
 
