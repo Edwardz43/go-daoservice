@@ -1,4 +1,4 @@
-module my-daoservice
+module go-daoservice
 
 go 1.12
 
